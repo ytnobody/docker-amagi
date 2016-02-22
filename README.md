@@ -15,16 +15,18 @@ Example.
     use Amagi;
     amagi_init;
     
-    my $member = {};
+    our $member = {};
     
     get '/' => sub {
         { members => [ sort keys %$member ] };
     };
+    
     get '/member/{id:[0-9]+}' => sub {
         my ($app, $req) = @_;
         my $id = $req->captured->{id};
-        { member => $member->{id} };
+        { member => $member->{$id} };
     };
+    
     post '/member/{id:[0-9]+}' => sub {
         my ($app, $req) = @_;
         my $id   = $req->captured->{id}; 
@@ -32,6 +34,7 @@ Example.
         $member->{$id} = {id => $id, name => $name};
         { message => 'registered' };
     };
+    
     __PACKAGE__->app;
 
 Then, save as 'app.psgi'.
